@@ -1,0 +1,209 @@
+---
+title: "CIA-2_MLA"
+author: "Roshan Ravindra"
+date: "2022-09-01"
+output: html_document
+---
+
+#Calling libraries
+
+```{r}
+library(caret)
+library(class)
+library(devtools)
+library(e1071)
+library(ggplot2)
+library(Hmisc)
+library(klaR)
+library(MASS)
+library(nnet)
+library(plyr)
+library(pROC)
+library(psych)
+library(scatterplot3d)
+library(dplyr)
+library(rpart)
+library(rpart.plot)
+library(randomForest)
+library(neuralnet)
+library(InformationValue)
+library(ISLR)
+library(DataExplorer)
+library(Amelia)
+```
+
+#Importing the dataset
+```{r}
+cs<-read.csv("D:\\MBA\\Term 4\\MLA-1\\Datasets\\HR_Attrition.csv")
+```
+
+#Summary and structure of data
+```{r}
+summary(cs)
+str(cs)
+```
+#The summary of the dataset tells about the mean, median, the minimum and maximum values of the variables and the quartile values. The mean of each of the variable tells about the average value of the variable. The minimum and maximum values represent the upper and lower limit of each of the variable. The median is the middle most value of the variable. The first quartile value is the median of the bottom half of the data in a variable. The third quartile value represents the median of the top part of the equally divided dataset into half. The data exploration also includes finding the number of rows and columns present in the dataset.
+
+
+```{r}
+names(cs)
+nrow(cs)
+ncol(cs)
+```
+##From the structure of the dataset, we can see that it  has 16501 rows and 33 columns.
+
+plot_correlation(cs$Working.in.Native.Place,cs$Working.Status)
+
+## Converting the target variable to categorical variable
+```{r}
+cs$Working.Status=factor(cs$Working.Status)
+```
+
+
+#Defining dummy varibles
+```{r}
+cs$F<-ifelse(cs$Gender=="F",1,0)
+cs$Married<-ifelse(cs$Marital.Status=="Married",1,0)
+cs$Post.Graduate<-ifelse(cs$Degree.type=="Post.Graduate",1,0)
+cs$F<-ifelse(cs$Gender=="F",1,0)
+cs$Yes<-ifelse(cs$Working.in.Native.Place=="Yes",1,0)
+cs$Probation<-ifelse(cs$Employment.type=="Probation",1,0)
+cs$Not.Confirmed<-ifelse(cs$Confirmation.Status=="Not.Confirmed",1,0)
+cs$F<-ifelse(cs$Gender=="F",1,0)
+```
+
+#MISSING VALUE ANALYSIS
+```{r}
+plot_missing(cs)
+```
+#From the missing plot, we can see that the data has no missing values
+
+#Correlation
+```{r}
+plot_correlation(cs)
+```
+
+#2.
+```{r}
+cs<-read.csv("D:\\MBA\\Term 4\\MLA-1\\Datasets\\HR_Attrition.csv")
+library(ggplot2)
+ggplot(cs, ggplot2::aes(x=Working.Status, y=Total.leave, fill=Working.Status)) + ggplot2::geom_boxplot()
+```
+#From the box plot, we can see that the employees who are still working in the company tend to take more leaves than the ones who left the company. It can be inferred that the availing of leave is not influencing the attrition rate of the employees.
+
+#3
+```{r}
+ggplot(cs, ggplot2::aes(x=RM.Reportees.Count, y=RM.Reportee.Male, fill=RM.Reportees.Count)) + ggplot2::geom_boxplot()
+
+ggplot(cs, ggplot2::aes(x=RM.Reportees.Count, y=RM.Reportee.Female, fill=RM.Reportees.Count)) + ggplot2::geom_boxplot()
+```
+#From the two box plots, we can see that the number of male reportees who report to the Reporting manager are more than the female reportees
+
+#2.
+#Feature engineering
+```{r}
+cs<-read.csv("D:\\MBA\\Term 4\\MLA-1\\Datasets\\HR_Attrition.csv")
+cs$Age<-ifelse(cs$RM.Age>50 ,1,0)
+str(cs)
+```
+#Feature engineering is done by taking the age of the reporting managwer. Managers who are aged tend to be more skeptical about the tasks given to the employees and want to to complete before time and are always very serious. This can be one of the reason the employee attrition rate in increasing in the company. Therefore, the age of reporting manager whihc is higher than 50 are considered as '1' and lesser than 50 are considered as '0'. This engineered feature will help the company to know if the age of the reporting manager is one of the cause for attrition of employees.
+
+#3.
+#Logistic regression
+#Data Partitioning
+set.seed(123)
+cs_mixed<-cs[order(runif(16501)),]
+cs_training<-cs_mixed[1:11551,]
+cs_testing<-cs_mixed[11552:16501,]
+
+cs$Working.Status=factor(cs$Working.Status)
+
+## Converting the target variable to categorical variable
+```{r}
+cs$Working.Status=factor(cs$Working.Status)
+cs$Department =factor(cs$Department)
+cs$Employee.Category =factor(cs$Employee.Category)
+cs$Zodiac.Sign =factor(cs$Zodiac.Sign)
+cs$Gender =factor(cs$Gender)
+cs$Marital.Status =factor(cs$Marital.Status)
+cs$Employee.Current.Age =factor(cs$Employee.Current.Age)
+cs$Tenure =factor(cs$Tenure )
+cs$Prior.Work.Exp =factor(cs$Prior.Work.Exp)
+cs$CTC_current_year  =factor(cs$CTC_current_year)
+```
+cs<-factor(cs)
+str(cs)
+
+#Model building
+#Build Full Model
+#MODEL BUILDING
+#SIGMOID FUNCTION
+```{r}
+cs<-read.csv("D:\\MBA\\Term 4\\MLA-1\\Datasets\\HR_Attrition.csv")
+cs$Working.Status=factor(cs$Working.Status)
+str(cs)
+
+Logit.1<-Working.Status  ~ Tenure
+logit.plot<-glm(Logit.1, data=cs_training, family=binomial())
+summary(logit.plot)
+```
+#p-value is less than 0.05. Therefore, Tenure variable is a good predictor for the dependent variable Working status"
+
+#Prediction
+```{r}
+pred.plot.logit <- predict.glm(logit.plot, newdata=cs_testing, type="response")
+```
+
+
+#For all the variables
+str(attr1)
+
+```{r}
+Logit.eq.1<-Working.Status ~ Days.worked.in.last.quarter+Avg.Weighted.Performance+Tenure+Employee.Age.During.DOJ+Prior.Work.Exp+CTC_previous_Year+CTC_current_year
+
+Logit.1 <- glm(Logit.eq.1   , cs_training, family = binomial)
+summary(Logit.1)
+```
+#we can see that days worked in last quarter is also an important variable in predicting the attrition.
+
+#vif
+```{r}
+library(car)
+vif(Logit.1)
+```
+
+#For the significant ones.
+```{r}
+Logit.eq.final<-Working.Status ~ Days.worked.in.last.quarter+Avg.Weighted.Performance+Tenure
+
+Logit.final <- glm(Logit.eq.final   , cs_training, family = binomial)
+
+summary(Logit.final)
+
+vif(Logit.final)
+```
+#The variables the days worked in last quarter, Avg Weighted Performance and Tenure have a VIF value os less than 5. Therefore, these independent variables exhibit no multicolinearity and can be used for builiding the model.
+
+#Prediction
+```{r}
+pred.plot.logit1 <- predict.glm(Logit.final, newdata=cs_testing, type="response")
+```
+
+accuracy.logit<-
+  roc.logit<-roc(cs_testing$No,pred.plot.logit1)
+
+
+```{r}
+pred.plot.logit1 
+
+tab.logit<-confusionMatrix(val.logit$Default,pred.logit.final,threshold = 0.5)
+tab.logit
+tab.logit
+accuracy.logit<-roc.logit<-roc(cs_testing$Working.Status,pred.plot.logit1 )
+roc.logit
+plot(roc.logit)
+```
+
+
+
+
