@@ -66,32 +66,32 @@ paran(d, iterations=10000, quietly=FALSE,
 #components (which carry the most variance).
 #PC1
 var<-get_pca_var(pca)
-a<-fviz_contrib(pca, "var", axes=1, xtickslab.rt=90) # default angle=45°
+a<-fviz_contrib(pca, "var", axes=1, xtickslab.rt=90) # default angle=45Â°
 plot(a,main = "Variables percentage contribution of first Principal Components")
 
 #PC2
 var<-get_pca_var(pca)
-a<-fviz_contrib(pca, "var", axes=2, xtickslab.rt=90) # default angle=45°
+a<-fviz_contrib(pca, "var", axes=2, xtickslab.rt=90) # default angle=45Â°
 plot(a,main = "Variables percentage contribution of second Principal Components")
 
 #PC3
 var<-get_pca_var(pca)
-a<-fviz_contrib(pca, "var", axes=3, xtickslab.rt=90) # default angle=45°
+a<-fviz_contrib(pca, "var", axes=3, xtickslab.rt=90) # default angle=45Â°
 plot(a,main = "Variables percentage contribution of third Principal Components")
 
 #PC4
 var<-get_pca_var(pca)
-a<-fviz_contrib(pca, "var", axes=4, xtickslab.rt=90) # default angle=45°
+a<-fviz_contrib(pca, "var", axes=4, xtickslab.rt=90) # default angle=45Â°
 plot(a,main = "Variables percentage contribution of fourth Principal Components")
 
 #PC5
 var<-get_pca_var(pca)
-a<-fviz_contrib(pca, "var", axes=5, xtickslab.rt=90) # default angle=45°
+a<-fviz_contrib(pca, "var", axes=5, xtickslab.rt=90) # default angle=45Â°
 plot(a,main = "Variables percentage contribution of fifth Principal Components")
 
 #PC6
 var<-get_pca_var(pca)
-a<-fviz_contrib(pca, "var", axes=6, xtickslab.rt=90) # default angle=45°
+a<-fviz_contrib(pca, "var", axes=6, xtickslab.rt=90) # default angle=45Â°
 plot(a,main = "Variables percentage contribution of sixth Principal Components")
 #-------------------------------------------------------------------------------
 
